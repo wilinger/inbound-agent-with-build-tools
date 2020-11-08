@@ -1,6 +1,8 @@
 FROM jenkins/inbound-agent
 ARG DOCKER_VERSION=5:19.03.12~3-0~debian-buster
 ARG DC_VERSION=1.27.2
+ARG TERRAFORM_VERSION=0.13.5
+ARG AWS_PROVIDER_VERSION=3.14.1
 USER root
 
 RUN apt-get update && \
@@ -12,8 +14,13 @@ RUN apt-get update && \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - && \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com buster main" && \
     apt-get update && \
-    apt-get install -qq -y --no-install-recommends docker-ce=${DOCKER_VERSION} terraform && \
-    curl -L https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
+    apt-get install -qq -y --no-install-recommends docker-ce=${DOCKER_VERSION} terraform={$TERRAFORM_VERSION} && \
+    curl -sSL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose && \
+    curl -sSL https://releases.hashicorp.com/terraform-provider-aws/${AWS_PROVIDER_VERSION}/terraform-provider-aws_${AWS_PROVIDER_VERSION}_linux_amd64.zip -o /tmp/aws-provider.zip && \
+    mkdir -p /usr/lib/terraform-plugins && \
+    unzip -d /usr/lib/terraform-plugins /tmp/aws-provider.zip && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+USER jenkins
 
