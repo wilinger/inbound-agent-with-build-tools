@@ -18,8 +18,8 @@ RUN apt-get update && \
     curl -L https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose && \
     curl -L https://releases.hashicorp.com/terraform-provider-aws/${AWS_PROVIDER_VERSION}/terraform-provider-aws_${AWS_PROVIDER_VERSION}_linux_amd64.zip -o /tmp/aws-provider.zip && \
-    mkdir -p /usr/lib/terraform-plugins && \
-    unzip -d /usr/lib/terraform-plugins /tmp/aws-provider.zip && \
+    mkdir -p /usr/lib/terraform-plugins/registry.terraform.io/hashicorp/aws/${AWS_PROVIDER_VERSION}/linux_amd64 && \
+    unzip -d /usr/lib/terraform-plugins/registry.terraform.io/hashicorp/aws/${AWS_PROVIDER_VERSION/linux_amd64 /tmp/aws-provider.zip && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 USER jenkins
